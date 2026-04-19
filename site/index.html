@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Helen en CABA · PHs disponibles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <span class="brand__mark">H</span>
+        <div>
+          <h1>Helen en CABA</h1>
+          <p>Relevamiento de PHs en alquiler · Chacarita · Colegiales · Villa Crespo · Palermo y aledaños</p>
+        </div>
+      </div>
+      <div class="topbar__meta">
+        <span id="resultCount" class="count">—</span>
+        <span class="count__label">propiedades</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="filters" aria-label="Filtros">
+      <section class="filter-block">
+        <h2>Tipo <span class="filter-hint">(PH por brief)</span></h2>
+        <div id="filterTipos" class="chips"></div>
+        <p class="hint">PH es lo que pide el brief. Destildá para ver Deptos/Casas (todos temporarios amoblados).</p>
+      </section>
+
+      <section class="filter-block">
+        <h2>Barrio <span class="filter-hint">(del brief)</span></h2>
+        <div id="filterBarrios" class="chips"></div>
+      </section>
+
+      <section class="filter-block">
+        <h2>Precio mensual (USD)</h2>
+        <div class="range">
+          <label>Mín <input type="number" id="priceMin" placeholder="0" inputmode="numeric" /></label>
+          <label>Máx <input type="number" id="priceMax" placeholder="sin tope" inputmode="numeric" /></label>
+        </div>
+        <p class="hint">Filtra por el <strong>mensual equivalente</strong>. ARS → USD con tipo de cambio <strong id="exchangeRateDisplay">—</strong> (editable en <code>app.js</code>). Avisos con precio por noche/5 noches (Airbnb) se multiplican a 30 días.</p>
+      </section>
+
+      <section class="filter-block">
+        <h2>Ambientes (mín)</h2>
+        <div class="segmented" id="filterAmbientes">
+          <button type="button" data-amb="ALL">Todos</button>
+          <button type="button" data-amb="1">1+</button>
+          <button type="button" data-amb="2" class="is-active">2+</button>
+          <button type="button" data-amb="3">3+</button>
+          <button type="button" data-amb="4">4+</button>
+        </div>
+      </section>
+
+      <section class="filter-block">
+        <h2>Metros cubiertos (mín)</h2>
+        <div class="segmented" id="filterM2">
+          <button type="button" data-m2="0">Todos</button>
+          <button type="button" data-m2="35">35+</button>
+          <button type="button" data-m2="50" class="is-active">50+</button>
+          <button type="button" data-m2="70">70+</button>
+          <button type="button" data-m2="100">100+</button>
+        </div>
+      </section>
+
+      <section class="filter-block">
+        <h2>Características</h2>
+        <label class="check"><input type="checkbox" data-feat="patio" /> <span>Patio propio</span></label>
+        <label class="check"><input type="checkbox" data-feat="terraza" /> <span>Terraza</span></label>
+        <label class="check"><input type="checkbox" data-feat="sin_expensas" /> <span>Sin expensas</span></label>
+        <label class="check"><input type="checkbox" data-feat="amoblado" checked /> <span>Amoblado</span></label>
+        <label class="check"><input type="checkbox" data-feat="reciclado" /> <span>Reciclado / a estrenar</span></label>
+        <label class="check"><input type="checkbox" data-feat="pet_friendly" /> <span class="star">★ Apto mascotas</span></label>
+        <label class="check"><input type="checkbox" data-feat="al_fondo" /> <span class="star star--teal">★ PH al fondo (heurística)</span></label>
+      </section>
+
+      <section class="filter-block">
+        <h2>Fuente</h2>
+        <div id="filterSources" class="chips"></div>
+      </section>
+
+      <section class="filter-block">
+        <h2>Inmobiliaria</h2>
+        <input type="text" id="filterInmo" list="inmoList" placeholder="Buscar inmobiliaria…" class="text-input" />
+        <datalist id="inmoList"></datalist>
+      </section>
+
+      <section class="filter-block">
+        <h2>Filtros de descarte</h2>
+        <label class="check"><input type="checkbox" id="hideComercial" checked /> <span>Ocultar "solo uso comercial"</span></label>
+        <p class="hint">Avisos marcados "solo comercial/profesional" no sirven para vivir.</p>
+      </section>
+
+      <button type="button" id="resetBtn" class="reset">Limpiar filtros</button>
+
+      <section class="filter-block filter-block--notes">
+        <h2>Notas del brief</h2>
+        <ul class="notes">
+          <li><strong>"Al fondo"</strong> se detecta por heurística (palabras clave). Confirmar en visita: tocar medianera, ver qué hay arriba.</li>
+          <li>Medianera de durlock → descartar.</li>
+          <li>"Apto mascotas" casi nunca está declarado — negociar con el dueño.</li>
+        </ul>
+      </section>
+    </aside>
+
+    <section class="results">
+      <div class="results__header">
+        <div class="sort">
+          <label for="sortBy">Orden</label>
+          <select id="sortBy">
+            <option value="price-asc">Precio USD: menor a mayor</option>
+            <option value="price-desc">Precio USD: mayor a menor</option>
+            <option value="m2-desc">Metros: mayor a menor</option>
+            <option value="amb-desc">Ambientes: mayor a menor</option>
+          </select>
+        </div>
+      </div>
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" hidden>
+        <h3>No hay propiedades con estos filtros.</h3>
+        <p>Probá bajar el mínimo de m² o ambientes, sumar barrios, o destildar "ocultar comerciales".</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Relevamiento generado <span id="generatedAt"></span> · Fuente: <span id="generatedSources"></span>. Cada card enlaza al aviso original. Precios mostrados en la moneda publicada (ARS o USD) y normalizados a USD para filtrar/ordenar.</p>
+    <p>Para refrescar datos: <code>python3 scripts/scrape.py</code>. Para ajustar barrios/heurísticas: <code>scripts/config.json</code>.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

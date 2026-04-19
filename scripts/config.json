@@ -1,0 +1,92 @@
+{
+  "_comment": "Config del scraper. Editá y re-corré `python3 scripts/scrape.py`. Ver README.md § 'Tocar la config'.",
+
+  "sources": {
+    "argenprop": {
+      "habilitado": true,
+      "base_url": "https://www.argenprop.com/ph/alquiler/{slug}",
+      "max_pages_per_barrio": 10,
+      "pagina_param": "pagina"
+    },
+    "remax": {
+      "habilitado": true,
+      "api_url": "https://api-ar.redremax.com/remaxweb-ar/api/listings/findAllWithEntrepreneurships",
+      "listing_url_prefix": "https://www.remax.com.ar/listings/",
+      "operation_id": 2,
+      "type_id": 12,
+      "page_size": 50,
+      "image_cdn": "https://d1acdg20u0pmxj.cloudfront.net/",
+      "image_size_suffix": "360x200",
+      "image_ext": ".webp"
+    },
+    "airbnb": {
+      "habilitado": true,
+      "_comment": "Airbnb no categoriza por 'PH' (PH es un término argentino). Todos los listings de Airbnb se etiquetan tipo='Depto' (mayoría) o 'Casa' si aplica. El UI tiene un filtro 'Tipo de propiedad' con 'PH' seleccionado por default — los de Airbnb aparecen solo al destildar."
+    },
+    "mercadolibre": {
+      "habilitado": true,
+      "max_pages": 6,
+      "_comment": "Scrapea UI web (la API oficial tira 403). Dos pasadas: alquiler tradicional + alquiler-temporario. Los slugs de barrios del config se usan directo en la URL (barrio-o-barrio-o-...)."
+    },
+    "zonaprop": {
+      "habilitado": true,
+      "max_pages": 10,
+      "barrios_per_url": 8,
+      "_comment": "Requiere curl_cffi (pip3 install --break-system-packages curl_cffi) para pasar Cloudflare. Extrae window.__PRELOADED_STATE__ — JSON limpio. Chunkea barrios en la URL (por límite de longitud)."
+    },
+    "properati": {
+      "habilitado": false,
+      "max_pages": 3,
+      "_comment": "DESHABILITADO: Properati no categoriza PH separado de Departamento (todo lumped como 'Departamento en Alquiler en X'). Verificado abril 2026: 0/60 listings tienen 'PH' en título o markup. Lo dejamos por si en el futuro agregan el filtro. Si se habilita, scraper pide /s/{barrio}/alquiler y filtra client-side."
+    }
+  },
+
+  "_comment_barrios": "Orden importante: sub-barrios primero para que sus listings se etiqueten específicos; el barrio 'padre' al final recoge los que no caen en ningún sub.",
+
+  "barrios": [
+    { "nombre": "Chacarita",          "slug": "chacarita",          "prioridad": 1 },
+    { "nombre": "Colegiales",         "slug": "colegiales",         "prioridad": 1 },
+    { "nombre": "Villa Crespo",       "slug": "villa-crespo",       "prioridad": 1 },
+    { "nombre": "Villa Ortúzar",      "slug": "villa-ortuzar",      "prioridad": 2 },
+    { "nombre": "Parque Chas",        "slug": "parque-chas",        "prioridad": 2 },
+
+    { "nombre": "Palermo Hollywood",  "slug": "palermo-hollywood",  "prioridad": 3 },
+    { "nombre": "Palermo Soho",       "slug": "palermo-soho",       "prioridad": 3 },
+    { "nombre": "Palermo Viejo",      "slug": "palermo-viejo",      "prioridad": 3 },
+    { "nombre": "Palermo",            "slug": "palermo",            "prioridad": 3 },
+
+    { "nombre": "Almagro Norte",      "slug": "almagro-norte",      "prioridad": 4 },
+    { "nombre": "Almagro Sur",        "slug": "almagro-sur",        "prioridad": 4 },
+    { "nombre": "Almagro",            "slug": "almagro",            "prioridad": 4 },
+
+    { "nombre": "Caballito Norte",    "slug": "caballito-norte",    "prioridad": 4 },
+    { "nombre": "Caballito Sur",      "slug": "caballito-sur",      "prioridad": 4 },
+    { "nombre": "Caballito",          "slug": "caballito",          "prioridad": 4 },
+
+    { "nombre": "Belgrano R",         "slug": "belgrano-r",         "prioridad": 5 },
+    { "nombre": "Belgrano C",         "slug": "belgrano-c",         "prioridad": 5 },
+    { "nombre": "Belgrano Chico",     "slug": "belgrano-chico",     "prioridad": 5 },
+    { "nombre": "Belgrano Barrancas", "slug": "belgrano-barrancas", "prioridad": 5 },
+    { "nombre": "Belgrano",           "slug": "belgrano",           "prioridad": 5 },
+
+    { "nombre": "Lomas de Núñez",     "slug": "lomas-de-nunez",     "prioridad": 5 },
+    { "nombre": "Núñez",              "slug": "nunez",              "prioridad": 3 },
+
+    { "nombre": "Saavedra",           "slug": "saavedra",           "prioridad": 5 }
+  ],
+
+  "sleep_between_requests": 0.4,
+
+  "_comment_features": "Keywords por feature. Case-insensitive, matchean por substring.",
+
+  "feature_keywords": {
+    "patio":          ["patio"],
+    "terraza":        ["terraza"],
+    "sin_expensas":   ["sin expensas", "s/expensas", "no paga expensas"],
+    "amoblado":       ["amoblado", "amueblado"],
+    "pet_friendly":   ["apto mascota", "pet friendly", "admite mascota", "se acepta mascota", "apto pet"],
+    "reciclado":      ["reciclado", "refaccionado", "a estrenar", "a nuevo", "recién pintado", "recien pintado"],
+    "al_fondo":       [" al fondo", "ultimo al fondo", "último al fondo", "segundo al fondo", "tercero al fondo", "2do al fondo", "3ro al fondo", "ph interno", "contrafrente", "al contrafrente"],
+    "solo_comercial": ["solo uso comercial", "solo uso profesional", "solo apto comercial", "exclusivo comercial", "uso comercial exclusivo", "no vivienda", "no apto vivienda", "únicamente oficina", "unicamente oficina", "solo comercial", "salon eventos", "salón eventos", "salon de eventos", "salón de eventos", "para eventos", "eventos sociales", "casa de eventos"]
+  }
+}
