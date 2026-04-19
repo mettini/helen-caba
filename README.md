@@ -1,6 +1,6 @@
 # Helen en CABA
 
-Mini-site para presentar un relevamiento de PHs en alquiler en CABA a Helen, a partir del brief detallado en [`helen_caba.md`](./helen_caba.md).
+Mini-site para presentar un relevamiento de PHs en alquiler en CABA a Helen, a partir del brief detallado en [`docs/brief.md`](./docs/brief.md).
 
 Pensado como punto de partida iterativo: se arranca con una primera selección, Helen pide sacar/agregar, y el site se actualiza editando JSON.
 
@@ -31,7 +31,7 @@ Verificar: `python3 --version` debería devolver `Python 3.x.x` (o `python --ver
 ## Estructura del repo
 
 ```
-helen_caba.md            brief (perfil, barrios, criterios, red flags, presupuesto)
+docs/brief.md            brief (perfil, barrios, criterios, red flags, presupuesto)
 CLAUDE.md                guía técnica para devs/agentes que sigan el proyecto
 README.md                este archivo
 site/
@@ -111,5 +111,5 @@ Los listings que aparecen en **ambas** fuentes (misma dirección) se muestran **
 1. Abrí el site y jugá con los filtros.
 2. Por cada PH que descartes, decime "sacá el de [dirección/barrio]" y lo oculto.
 3. Los PHs marcados **Solo comercial** (badge rojo) están ocultos por default — son oficinas.
-4. Tené a mano el checklist de [`helen_caba.md`](./helen_caba.md) al visitar: el site no sabe si la medianera es durlock, ni confirma "al fondo" (solo sospecha).
+4. Tené a mano el checklist de [`docs/brief.md`](./docs/brief.md) al visitar: el site no sabe si la medianera es durlock, ni confirma "al fondo" (solo sospecha).
 5. Precios: cada aviso en su moneda original + equivalente en USD abajo (conversión 1 USD = 1400 ARS).

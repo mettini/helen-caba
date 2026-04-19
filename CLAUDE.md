@@ -1,10 +1,10 @@
 # CLAUDE.md — contexto técnico del proyecto
 
-Este repo arma un mini-site de relevamiento de PHs en alquiler en CABA para una búsqueda específica (ver `helen_caba.md` — brief con perfil, barrios, criterios). Este archivo es la referencia técnica: cómo está hecho, cómo extenderlo, qué decisiones se tomaron y por qué.
+Este repo arma un mini-site de relevamiento de PHs en alquiler en CABA para una búsqueda específica (ver `docs/brief.md` — brief con perfil, barrios, criterios). Este archivo es la referencia técnica: cómo está hecho, cómo extenderlo, qué decisiones se tomaron y por qué.
 
 ## El brief manda
 
-Antes de tocar código, leer `helen_caba.md`. Todo el modelado (qué filtros, qué features se extraen, qué se oculta por default) sale de ahí. Ejemplos:
+Antes de tocar código, leer `docs/brief.md`. Todo el modelado (qué filtros, qué features se extraen, qué se oculta por default) sale de ahí. Ejemplos:
 
 - `hideComercial` prendido por default → el brief pide vivienda + estudio de grabación, no oficina.
 - Feature `al_fondo` es **heurística** (palabras clave en el aviso) — el brief aclara que hay que chequearlo en visita.
@@ -18,7 +18,7 @@ Si el brief cambia, los defaults del site deberían cambiar con él.
 **Stack mínimo**: Python 3 (stdlib) + vanilla JS. Sin Node, sin framework, sin build step, sin `pip install`.
 
 ```
-helen_caba.md              brief
+docs/brief.md              brief
 README.md                  instrucciones de uso
 CLAUDE.md                  esto
 .gitignore
