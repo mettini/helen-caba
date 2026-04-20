@@ -14,7 +14,7 @@ python3 -m http.server 8000
 # abrí http://localhost:8000
 ```
 
-Eso es todo para ver el site. Para refrescar los datos desde Argenprop:
+Eso es todo para ver el site. Para refrescar los datos (o pedir a la AI):
 
 ```bash
 python3 scripts/scrape.py
